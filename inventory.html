@@ -222,6 +222,29 @@
             font-weight: 600;
         }
 
+        .preorder-link-card {
+            display: flex; align-items: center; gap: 12px;
+            background: var(--glass-bg-strong);
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 14px 16px;
+            box-shadow: var(--glass-shadow);
+            margin-bottom: 25px;
+            text-decoration: none;
+            color: inherit;
+        }
+        .preorder-link-icon {
+            width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
+            background: #fff6e0; color: #c9932c;
+            display: flex; align-items: center; justify-content: center; font-size: 17px;
+        }
+        .preorder-link-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+        .preorder-link-title { font-weight: 700; color: #333; font-size: 14.5px; }
+        .preorder-link-sub { font-size: 11.5px; color: #999; }
+        .preorder-link-chevron { color: #ccc; flex-shrink: 0; }
+
         .filter-section-container {
             display: flex;
             flex-direction: column;
@@ -779,6 +802,15 @@
             </div>
         </div>
 
+        <a href="my_preorders" class="preorder-link-card">
+            <div class="preorder-link-icon"><i class="fa-solid fa-box"></i></div>
+            <div class="preorder-link-text">
+                <span class="preorder-link-title">พรีออเดอร์ของฉัน</span>
+                <span class="preorder-link-sub">ดูสถานะคำสั่งซื้อและการจัดส่ง</span>
+            </div>
+            <i class="fa-solid fa-chevron-right preorder-link-chevron"></i>
+        </a>
+
         <div class="filter-section-container">
     <div>
         <span class="filter-label"><i class="fa-solid fa-filter text-pink-400"></i> Fliter</span>
@@ -987,7 +1019,7 @@
     // 3.5 ปุ่มหลัก: BLM48 PhotoCard (มีตัวกรองย่อยตามชื่อคอลเลกชัน)
     if (hasCategory('BLM48 PhotoCard')) {
         const btnPhotoCard = document.createElement('button');
-        btnPhotoCard.className = `btn-tab ${currentPrimaryTab === 'photocard' ? 'active' : ''}`;
+        btnPhotoCard.className = `btn-tab ${currentPrimaryTab === 'photo_card' ? 'active' : ''}`;
         btnPhotoCard.innerHTML = `<i class="fa-solid fa-id-card"></i> BLM48 PhotoCard`;
         btnPhotoCard.onclick = () => selectPrimaryTab('photocard');
         primaryTabsContainer.appendChild(btnPhotoCard);

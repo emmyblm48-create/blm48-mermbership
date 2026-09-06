@@ -63,13 +63,14 @@ document.addEventListener('DOMContentLoaded', function initSwipeBackGesture() {
   }, { passive: true });
 });
 
-// 🛡️ กันกดรูปค้าง (long-press) แล้วเซฟรูป / คลิกขวา Save Image As ทุกหน้า ยกเว้นหน้า inventory
-// (หน้า inventory ต้องการให้ผู้ใช้เซฟรูปไอเทมที่ซื้อไว้ได้ตามปกติ)
+// 🛡️ กันกดรูปค้าง (long-press) แล้วเซฟรูป / คลิกขวา Save Image As ทุกหน้า ยกเว้นหน้า inventory และ admin
+// (หน้า inventory ต้องการให้ผู้ใช้เซฟรูปไอเทมที่ซื้อไว้ได้ตามปกติ, หน้า admin ต้องการให้แอดมินเซฟรูปสลิปโอนเงินได้)
 // ใช้ delegated event ที่ document แทนการเซ็ต attribute ทีละรูป เพื่อให้ครอบคลุมรูปที่ยังไม่ถูกสร้าง
 // ตอนนี้ด้วย (โพสต์/แกลเลอรีที่โหลดทีหลังผ่าน JS) โดยไม่ต้องใช้ MutationObserver
 (function preventImageSaving() {
   const currentPage = window.location.pathname.replace(/\/+$/, '').split('/').pop() || '';
-  if (currentPage === 'inventory' || currentPage === 'inventory.html') return;
+  const excludedPages = ['inventory', 'inventory.html', 'admin', 'admin.html'];
+  if (excludedPages.includes(currentPage)) return;
 
   // คลิกขวา (เดสก์ท็อป) / long-press ที่ยิง contextmenu (บางเบราว์เซอร์บนมือถือ) บนรูปภาพ
   document.addEventListener('contextmenu', function(e) {
@@ -83,12 +84,18 @@ document.addEventListener('DOMContentLoaded', function initSwipeBackGesture() {
 
   // -webkit-touch-callout ปิดเมนู "บันทึกรูปภาพ" ตอนกดค้างบน iOS Safari โดยเฉพาะ (เบราว์เซอร์อื่นไม่รองรับ
   // property นี้ก็ไม่เป็นไร ยังมี contextmenu preventDefault ด้านบนช่วยกันซ้ำอีกชั้น)
+  // pointer-events: none คือตัวที่กันเมนู "ดาวน์โหลดรูปภาพ" ของ Android Chrome ตอนกดค้างได้จริง (Android ไม่สนใจ
+  // -webkit-touch-callout และบางรุ่นก็ไม่ยิง contextmenu event ให้ preventDefault ทัน) - ทำให้รูปไม่รับอีเวนต์การกด
+  // เลยแทน ยกเว้นรูปที่มี onclick ของตัวเอง (เช่น รูปโพสต์ที่กดเพื่อเปิดดูเต็มจอ) ที่ยังต้องคลิกได้ปกติ
   const style = document.createElement('style');
   style.textContent = `
     img {
       -webkit-touch-callout: none;
       -webkit-user-select: none;
       user-select: none;
+    }
+    img:not([onclick]) {
+      pointer-events: none;
     }
   `;
   document.head.appendChild(style);
